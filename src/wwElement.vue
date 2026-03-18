@@ -204,7 +204,7 @@ export default {
     height: 100%;
   }
 
-  // Root trigger element
+  // Root trigger element (child of component, needs :deep)
   :deep(.pv-select__root) {
     @include pv-input-base;
     display: flex;
@@ -224,7 +224,6 @@ export default {
     }
   }
 
-  // Invalid state
   &--invalid :deep(.pv-select__root) {
     border-color: var(--pv-danger, #EF4444);
 
@@ -234,9 +233,10 @@ export default {
     }
   }
 
-  // Label (selected value text)
   :deep(.pv-select__label) {
-    @include pv-font;
+    font-family: var(--pv-font, Inter, system-ui, sans-serif);
+    font-size: var(--pv-font-size, 14px);
+    color: var(--pv-text, #0f172a);
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -247,7 +247,6 @@ export default {
     }
   }
 
-  // Dropdown trigger arrow
   :deep(.pv-select__dropdown-trigger) {
     display: flex;
     align-items: center;
@@ -256,87 +255,11 @@ export default {
   }
 
   :deep(.pv-select__dropdown-icon) {
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     color: var(--pv-text-muted, #94a3b8);
   }
 
-  // Overlay panel
-  :deep(.pv-select__overlay) {
-    @include pv-dropdown;
-    margin-top: 4px;
-    z-index: 100;
-  }
-
-  // Header (filter area)
-  :deep(.pv-select__header) {
-    padding: 8px;
-    border-bottom: 1px solid var(--pv-border, #e2e8f0);
-  }
-
-  // Filter input
-  :deep(.pv-select__filter-input) {
-    @include pv-input-base;
-    width: 100%;
-    padding: 8px 12px;
-    font-size: 13px;
-
-    &:focus {
-      @include pv-focus-ring;
-    }
-  }
-
-  // List container
-  :deep(.pv-select__list-container) {
-    max-height: 14rem;
-    overflow-y: auto;
-  }
-
-  // List
-  :deep(.pv-select__list) {
-    list-style: none;
-    margin: 0;
-    padding: 4px 0;
-  }
-
-  // Option items
-  :deep(.pv-select__option) {
-    @include pv-dropdown-item;
-    @include pv-font;
-    display: flex;
-    align-items: center;
-
-    &[data-p-selected='true'] {
-      background-color: var(--pv-primary-light, #dbeafe);
-      color: var(--pv-primary, #3B82F6);
-      font-weight: 500;
-    }
-
-    &[data-p-focused='true'] {
-      background-color: var(--pv-primary-light, #dbeafe);
-    }
-
-    &[data-p-disabled='true'] {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-  }
-
-  // Option label text
-  :deep(.pv-select__option-label) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  // Empty message
-  :deep(.pv-select__empty-message) {
-    @include pv-font;
-    padding: var(--pv-input-py, 10px) var(--pv-input-px, 14px);
-    color: var(--pv-text-muted, #94a3b8);
-  }
-
-  // Hidden form input
   &__fake-input {
     background: rgba(0, 0, 0, 0);
     border: 0;
@@ -350,5 +273,101 @@ export default {
     right: 0;
     width: 100%;
   }
+}
+</style>
+
+<!-- Unscoped: overlay is teleported to body, scoped styles can't reach it -->
+<style lang="scss">
+.pv-select__overlay {
+  background: white;
+  border: 1px solid var(--pv-border, #e2e8f0);
+  border-radius: var(--pv-radius, 8px);
+  box-shadow: var(--pv-shadow, 0 4px 12px rgba(0, 0, 0, 0.1));
+  margin-top: 4px;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.pv-select__header {
+  padding: 8px;
+  border-bottom: 1px solid var(--pv-border, #e2e8f0);
+}
+
+.pv-select__filter-input {
+  font-family: var(--pv-font, Inter, system-ui, sans-serif);
+  font-size: var(--pv-font-size, 14px);
+  color: var(--pv-text, #0f172a);
+  background: var(--pv-surface, #f8fafc);
+  border: 1px solid var(--pv-border, #e2e8f0);
+  border-radius: var(--pv-radius, 8px);
+  padding: 8px 12px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color var(--pv-transition, 150ms),
+              box-shadow var(--pv-transition, 150ms);
+
+  &::placeholder {
+    color: var(--pv-text-muted, #94a3b8);
+  }
+
+  &:focus {
+    border-color: var(--pv-primary, #3B82F6);
+    box-shadow: 0 0 0 2px var(--pv-focus-ring, rgba(59, 130, 246, 0.3));
+  }
+}
+
+.pv-select__list-container {
+  max-height: 14rem;
+  overflow-y: auto;
+}
+
+.pv-select__list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.pv-select__option {
+  font-family: var(--pv-font, Inter, system-ui, sans-serif);
+  font-size: var(--pv-font-size, 14px);
+  color: var(--pv-text, #0f172a);
+  padding: var(--pv-input-py, 10px) var(--pv-input-px, 14px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color var(--pv-transition, 150ms);
+
+  &:hover {
+    background-color: var(--pv-primary-light, #dbeafe);
+  }
+
+  &[data-p-selected='true'] {
+    background-color: var(--pv-primary, #3B82F6);
+    color: var(--pv-primary-contrast, #ffffff);
+    font-weight: 500;
+  }
+
+  &[data-p-focused='true']:not([data-p-selected='true']) {
+    background-color: var(--pv-primary-light, #dbeafe);
+  }
+
+  &[data-p-disabled='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.pv-select__option-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pv-select__empty-message {
+  font-family: var(--pv-font, Inter, system-ui, sans-serif);
+  font-size: var(--pv-font-size, 14px);
+  padding: var(--pv-input-py, 10px) var(--pv-input-px, 14px);
+  color: var(--pv-text-muted, #94a3b8);
 }
 </style>
