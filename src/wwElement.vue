@@ -13,6 +13,7 @@
         :resetFilterOnHide="true"
         :autoFilterFocus="true"
         :appendTo="appendTarget"
+        fluid
         @update:modelValue="handleChange"
         @show="handleShow"
         @hide="handleHide"
